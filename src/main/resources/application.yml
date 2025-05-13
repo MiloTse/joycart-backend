@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: joycart-backend
+
+server:
+  # 后端宿主机映射到 8081，与前端 8080 共存
+  port: 8081
+
+  # 可选：设置上下文路径
+  # servlet:
+  #   context-path: /api
+
+datasource:
+  # 与 docker-compose.yml 中 db 服务名称、环境变量保持一致
+  url: jdbc:postgresql://db:5432/joycartdb
+  username: joycart
+  password: joycart
+
+jpa:
+  # 开发阶段可以 update，生产请改 validate 并用 Flyway 管理
+  hibernate:
+    ddl-auto: update
+  show-sql: true
+  properties:
+    hibernate.format_sql: true
+
+flyway:
+  enabled: true
+  # 迁移脚本路径
+  locations: classpath:db/migration

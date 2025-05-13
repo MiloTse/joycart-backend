@@ -1,0 +1,25 @@
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB:    joycartdb
+      POSTGRES_USER:  joycart
+      POSTGRES_PASSWORD: joycart
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  backend:
+    build: .
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL:      jdbc:postgresql://db:5432/joycartdb
+      SPRING_DATASOURCE_USERNAME: joycart
+      SPRING_DATASOURCE_PASSWORD: joycart
+    ports:
+      - "8080:8080"
+
+volumes:
+  pgdata:

@@ -42,18 +42,6 @@ public class UserServiceImpl implements UserService {
      * {@inheritDoc}
      */
     @Override
-    public UserDTO currentUser() {
-        // 在实际应用中，这里应该从安全上下文中获取当前用户
-        // 这里简化为直接获取ID为1的用户
-        User user = userRepository.findById(1L)
-                .orElseThrow(() -> new ResourceNotFoundException("Current user not found"));
-        return userMapper.toDTO(user);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public List<UserDTO> findAll() {
         List<User> users = userRepository.findAll();
         return userMapper.toDTOList(users);

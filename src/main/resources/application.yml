@@ -1,30 +1,67 @@
+# src/main/resources/application.yml
 spring:
   application:
     name: joycart-backend
 
+  datasource:
+    # Docker环境变量优先，本地开发时使用localhost:5433
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5433/joycartdb}
+    username: ${SPRING_DATASOURCE_USERNAME:joycart}
+    password: ${SPRING_DATASOURCE_PASSWORD:joycart}
+    # 增加连接超时时间
+    hikari:
+      connection-timeout: 30000
+      maximum-pool-size: 10
+
+  jpa:
+    show-sql: true
+    properties:
+      hibernate.format_sql: true
+    hibernate:
+      ddl-auto: update
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    
+  security:
+    # 公开端点配置，不需要认证即可访问
+    public-paths:
+      - /api/auth/login
+      - /api/auth/register
+      - /api/health
+      - /v3/api-docs/**
+      - /swagger-ui/**
+      - /swagger-ui.html
+      - /actuator/**
+
 server:
-  # 后端宿主机映射到 8081，与前端 8080 共存
-  port: 8081
+  port: 8082
 
-  # 可选：设置上下文路径
-  # servlet:
-  #   context-path: /api
-
-datasource:
-  # 与 docker-compose.yml 中 db 服务名称、环境变量保持一致
-  url: jdbc:postgresql://db:5432/joycartdb
-  username: joycart
-  password: joycart
-
-jpa:
-  # 开发阶段可以 update，生产请改 validate 并用 Flyway 管理
-  hibernate:
-    ddl-auto: update
-  show-sql: true
-  properties:
-    hibernate.format_sql: true
-
-flyway:
-  enabled: true
-  # 迁移脚本路径
-  locations: classpath:db/migration
+# 应用自定义配置
+app:
+  # API相关配置
+  api:
+    # 基础URL前缀
+    prefix: /api
+    # CORS配置
+    cors:
+      # 允许的源
+      allowed-origins: http://localhost:8082
+      # 允许的HTTP方法
+      allowed-methods: GET,POST,PUT,DELETE,OPTIONS
+      # 允许的请求头
+      allowed-headers: "*"
+      # 允许凭证
+      allow-credentials: true
+      # 最大缓存时间（秒）
+      max-age: 3600
+      
+  # JWT配置
+  jwt:
+    # JWT密钥（生产环境应该从环境变量读取）
+    secret-key: ${JWT_SECRET:5accdXtKnqE6BO2XxWNXHsbkLCLpwLKxMUMCFnUKbq1nZtHltyhVuVzPZ4lJcRVm}
+    # 令牌过期时间（毫秒）
+    expiration-ms: 86400000 # 24小时
+    # 刷新令牌过期时间（毫秒）
+    refresh-expiration-ms: 604800000 # 7天

@@ -19,7 +19,7 @@ services:
       SPRING_DATASOURCE_USERNAME: joycart
       SPRING_DATASOURCE_PASSWORD: joycart
     ports:
-      - "8081:8081"
+      - "8082:8082"
 
 volumes:
   pgdata:

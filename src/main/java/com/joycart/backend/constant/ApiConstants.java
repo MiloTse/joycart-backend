@@ -23,6 +23,11 @@ public final class ApiConstants {
     public static final String USERS_PATH = API_PREFIX + "/users";
     
     /**
+     * 认证API路径
+     */
+    public static final String AUTH_PATH = API_PREFIX + "/auth";
+    
+    /**
      * 允许的跨域源
      */
     public static final String CORS_ORIGIN = "http://localhost:8082";
